@@ -42,19 +42,18 @@ bool LastDownButtonState = LOW;       //last state of the down button
 //the codes array stores the up codes
 //the down codes are equal to the up codes plus one
 unsigned long int codes[]={ //stores the transmitter up button codes
-  //the down button codes are equal to the up button codes plus one
-  252945,
-  9861857,
-  6532833,
-  13108961,
+  6532833, 
   13806609,
   10427409,
+  15956497,
+  78353,
+  13108961,
   473617,
   6525457,
-  15956497,
+  252945,
+  9861857,
   14031377,
-  78353,
-  711697
+  711697,
 };
 
 void setup() {
