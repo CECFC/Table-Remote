@@ -6,10 +6,8 @@ Transmission codes can be obtained by running the ReceiveDemo_Advanced example s
 from the rc-switch library, and pressing the up or down button on the remote while pointed
 towards the recieving antenna. More information available at https://github.com/sui77/rc-switch
 
-The DotStar RGB LED onboard the Trinket M0 is controlled with the Adafruit Dotstar library,
-available at https://github.com/adafruit/Adafruit_DotStar
-
 Written by Fischer Moseley for CECFC during August 2018.
+Adapted by Branson Camp for CECFC during September 2019.
 */
 
 #include <RCSwitch.h>
@@ -18,7 +16,7 @@ Written by Fischer Moseley for CECFC during August 2018.
 #define WAIT_TIME             20 //time in ms to wait after a code is sent
 #define UP_BTN_PIN            3  //pin the up button is connected to
 #define DOWN_BTN_PIN          4  //pin the down button is connected to
-#define TX_PIN                8  //pin the transmitter is connected to
+#define TX_PIN                10  //pin the transmitter is connected to
 #define DEBOUNCE_SETTLE_TIME  50 //how long the buttons have to be settled for (in ms)
 
 #if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
@@ -107,7 +105,7 @@ void read_state_execute(){ //read button state and send necessary commands
 void loop() {
   if(Serial.available()){ //manual control over serial, also echos recieved characters
     char recieved = tolower(Serial.read());
-    Serial.print("(u)p, (d)own, or (r)eset: ");
+    Serial.print("[U]P, [D]OWN, OR [R]ESET: ");
     Serial.println(recieved);
     if(recieved=='u'){raise_all();}
     if(recieved=='d'){lower_all();}
