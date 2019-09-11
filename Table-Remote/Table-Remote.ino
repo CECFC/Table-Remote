@@ -12,14 +12,13 @@ available at https://github.com/adafruit/Adafruit_DotStar
 Written by Fischer Moseley for CECFC during August 2018.
 */
 
-#include <Adafruit_DotStar.h>
 #include <RCSwitch.h>
 
 #define BIT_LENGTH            24 //how many bits to send (used for binary zero padding)
 #define WAIT_TIME             20 //time in ms to wait after a code is sent
 #define UP_BTN_PIN            3  //pin the up button is connected to
 #define DOWN_BTN_PIN          4  //pin the down button is connected to
-#define TX_PIN                1  //pin the transmitter is connected to
+#define TX_PIN                8  //pin the transmitter is connected to
 #define DEBOUNCE_SETTLE_TIME  50 //how long the buttons have to be settled for (in ms)
 
 #if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
@@ -27,8 +26,7 @@ Written by Fischer Moseley for CECFC during August 2018.
   #define Serial SERIAL_PORT_USBVIRTUAL
 #endif
 
-RCSwitch mySwitch = RCSwitch(); //init the remote control
-Adafruit_DotStar strip = Adafruit_DotStar(1, 7, 8, DOTSTAR_BRG); //init the RGB LED
+RCSwitch mySwitch = RCSwitch(); //init the remote control\
 
 //button/debouncing variables
 unsigned long UpLastDebounceTime=0;   //last time the up button was toggled
@@ -63,50 +61,41 @@ void setup() {
   pinMode(UP_BTN_PIN, INPUT);
   pinMode(DOWN_BTN_PIN, INPUT);
 
-  strip.begin(); //init DotStar
-  strip.show();  //show the empty buffer
-
   mySwitch.enableTransmit(TX_PIN);
 }
 
 void raise_all(){
-  Serial.println("raising...");
-  strip.setPixelColor(0, 0xFF0000); //set DotStar to red
-  strip.show(); //update the DotStar
+  Serial.println("RAISING...");
   int len = sizeof(codes)/sizeof(codes[0]); //get length of array
   for(int i=0; i<len; i++){ //send each code
     mySwitch.send(codes[i], BIT_LENGTH);
+    Serial.print("SENDING CODE: ");
     Serial.println(codes[i]);
     delay(WAIT_TIME); //give the hardware time to settle
   }
-  strip.setPixelColor(0, 0x000000); //turn off the DotStar
-  strip.show(); //update the DotStar
-  Serial.println("raised");
+  Serial.println("DONE RAISING");
 }
 
 void lower_all(){
-  Serial.println("lowering...");
-  strip.setPixelColor(0, 0x00FF00);//set DotStar to Blue
-  strip.show(); //update the DotStar
+  Serial.println("LOWERING...");
   int len = sizeof(codes)/sizeof(codes[0]); //get length of array
   for(int i=0; i<len; i++){ //send each code
     mySwitch.send(codes[i]+1, BIT_LENGTH);
+    Serial.print("SENDING CODE: ");
     Serial.println(codes[i]+1);
     delay(WAIT_TIME); //give the hardware time to settle
   }
-  Serial.println("lowered");
-  strip.setPixelColor(0, 0x000000); //turn off the DotStar
-  strip.show(); //update the DotStar
+  Serial.println("DONE LOWERING");
 }
 
 void reset_states(){ //issues multiple lower commands to ensure desks are down
-  Serial.println("resetting...");
+  Serial.println("RESETTING...");
   lower_all();
   delay(15000);
   lower_all();
   delay(15000);
   lower_all();
-  Serial.println("reset");
+  Serial.println("DONE  RESETTING");
 } 
 
 void read_state_execute(){ //read button state and send necessary commands
@@ -117,8 +106,8 @@ void read_state_execute(){ //read button state and send necessary commands
 
 void loop() {
   if(Serial.available()){ //manual control over serial, also echos recieved characters
-    char recieved = Serial.read();
-    Serial.print("r: ");
+    char recieved = tolower(Serial.read());
+    Serial.print("(u)p, (d)own, or (r)eset: ");
     Serial.println(recieved);
     if(recieved=='u'){raise_all();}
     if(recieved=='d'){lower_all();}
