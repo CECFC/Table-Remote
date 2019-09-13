@@ -14,9 +14,9 @@ Adapted by Branson Camp for CECFC during September 2019.
 
 #define BIT_LENGTH            24 //how many bits to send (used for binary zero padding)
 #define WAIT_TIME             20 //time in ms to wait after a code is sent
-#define UP_BTN_PIN            3  //pin the up button is connected to
+#define UP_BTN_PIN            2  //pin the up button is connected to
 #define DOWN_BTN_PIN          4  //pin the down button is connected to
-#define TX_PIN                10  //pin the transmitter is connected to
+#define TX_PIN                8  //pin the transmitter is connected to
 #define DEBOUNCE_SETTLE_TIME  50 //how long the buttons have to be settled for (in ms)
 
 #if defined(ARDUINO_SAMD_ZERO) && defined(SERIAL_PORT_USBVIRTUAL)
